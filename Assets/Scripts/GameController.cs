@@ -9,9 +9,26 @@ public class GameController : MonoBehaviour
     public RectTransform ballTransform, ballDarkTransform;
     public GameObject ball, ballDark;
     public GameObject startButton, pauseButton, goButton;
-    public Text counterText;
-    float counter;
+    public Text scoreText;
+    public Text highScoreText;
+    public Text lastScoreText;
+    int score;
+    int lastScore;
     public float ballSpeed;
+
+    private void Start()
+    {
+        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore").ToString();
+        lastScoreText.text = PlayerPrefs.GetInt("LastScore").ToString() + " :Last Score";
+    }
+
+    private void Update()
+    {
+        if (score > PlayerPrefs.GetInt("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", score);
+        }
+    }
 
     public void Game()
     {
@@ -20,12 +37,12 @@ public class GameController : MonoBehaviour
         ballDarkTransform.transform.localPosition = new Vector3(0, grapeDarkRandomPos, 0);
         ballTransform.transform.DOLocalMove(new Vector3(0, -750, 0), ballSpeed).OnComplete(()=> {
             ballSpeed = 10;
-            counter = 0;
+            score = 0;
             Game();
         });
         startButton.SetActive(false);
         pauseButton.SetActive(true);
-        counterText.text = counter.ToString();
+        scoreText.text = score.ToString();
     }
 
     public void Pressed()
@@ -35,27 +52,28 @@ public class GameController : MonoBehaviour
 
         if (distance > 30)
         {
-            counter = 0;
+            score = 0;
             Game();
         }
 
         if (distance <= 30)
         {
-            counter++;
+            score++;
+            lastScore = score;
+            PlayerPrefs.SetInt("LastScore", lastScore);
             Game();
         }
 
-        if (counter % 10 == 0)
+        if (score % 10 == 0)
         {
             ballSpeed--;
-            print(counter);
         }
 
-        if (counter == 0)
+        if (score == 0)
         {
             ballSpeed = 10;
         }
-        counterText.text = counter.ToString();
+        scoreText.text = score.ToString();
 
     }
 
