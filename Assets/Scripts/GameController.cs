@@ -7,19 +7,26 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     public RectTransform ballTransform, ballDarkTransform;
+
     public GameObject ball, ballDark;
-    public GameObject startButton, pauseButton, goButton;
+    public GameObject startButton, pauseButton, goButton, pressedButton;
+
     public Text scoreText;
     public Text highScoreText;
     public Text lastScoreText;
+
     int score;
     int lastScore;
     public float ballSpeed;
 
+    AudioSource AS;
+    public AudioClip correct;
+    public AudioClip inCorrect;
     private void Start()
     {
         highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore").ToString();
         lastScoreText.text = PlayerPrefs.GetInt("LastScore").ToString() + " :Last Score";
+        AS = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -42,6 +49,7 @@ public class GameController : MonoBehaviour
         });
         startButton.SetActive(false);
         pauseButton.SetActive(true);
+        pressedButton.SetActive(true);
         scoreText.text = score.ToString();
     }
 
@@ -53,6 +61,8 @@ public class GameController : MonoBehaviour
         if (distance > 30)
         {
             score = 0;
+            AS.clip = inCorrect;
+            AS.Play();
             Game();
         }
 
@@ -60,6 +70,8 @@ public class GameController : MonoBehaviour
         {
             score++;
             lastScore = score;
+            AS.clip = correct;
+            AS.Play();
             PlayerPrefs.SetInt("LastScore", lastScore);
             Game();
         }
@@ -82,6 +94,7 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0;
         pauseButton.SetActive(false);
         goButton.SetActive(true);
+        pressedButton.SetActive(false);
     }
 
     public void GoGame()
@@ -89,5 +102,6 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1;
         pauseButton.SetActive(true);
         goButton.SetActive(false);
+        pressedButton.SetActive(true);
     }
 }
