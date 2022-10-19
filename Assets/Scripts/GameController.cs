@@ -24,8 +24,7 @@ public class GameController : MonoBehaviour
     public AudioClip inCorrect;
     private void Start()
     {
-        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore").ToString();
-        lastScoreText.text = PlayerPrefs.GetInt("LastScore").ToString() + " :Last Score";
+        
         AS = GetComponent<AudioSource>();
     }
 
@@ -95,6 +94,8 @@ public class GameController : MonoBehaviour
         pauseButton.SetActive(false);
         goButton.SetActive(true);
         pressedButton.SetActive(false);
+        highScoreText.text = "High Score: " + PlayerPrefs.GetInt("HighScore").ToString();
+        lastScoreText.text = PlayerPrefs.GetInt("LastScore").ToString() + " :Last Score";
     }
 
     public void GoGame()
